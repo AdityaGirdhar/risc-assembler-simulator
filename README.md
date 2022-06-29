@@ -4,7 +4,7 @@ Here's an assembler and simulator based on a hypothetical instruction set archit
 This is a project for CSE112 - Computer Organisation, IIIT Delhi.
 
 ## Adding code
-* Add the assembler code in 'Simple-Assembler directory
+* Add the assembler code in 'Simple-Assembler' directory
 * Add the simulator code in the `Simple-Simulator` directory
 * Make sure that both the assembler and the simulator read from `input.txt`
 * Make sure that both the assembler and the simulator write to `output.txt`
