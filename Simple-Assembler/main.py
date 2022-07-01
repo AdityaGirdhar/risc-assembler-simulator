@@ -1,6 +1,6 @@
 import difflib
 
-#Data and tables
+# Data and tables
 opcodes = {
     'add':["10000","A"],
     'sub':["10001","A"],
