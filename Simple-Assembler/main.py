@@ -57,7 +57,7 @@ registers = {
 	'R6':'110',
 }
 
-#Helper functions
+# Helper functions
 def syntax(opcode):
 	type = opcodeType[opcodes[opcode][0]]
 	if type == 'A':
