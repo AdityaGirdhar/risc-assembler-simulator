@@ -8,3 +8,6 @@ This is a project for CSE112 - Computer Organisation, IIIT Delhi.
 * Add the simulator code in the `Simple-Simulator` directory
 * Make sure that both the assembler and the simulator read from `input.txt`
 * Make sure that both the assembler and the simulator write to `output.txt`
+
+### Known bugs
+* No movr, mov acts as movi
