@@ -56,8 +56,7 @@ registers = {
 	'R5':'101',
 	'R6':'110',
 }
-lessthanflag=0
-morethanflag=0
+
 # Helper functions
 def syntax(opcode):
 	type = opcodeType[opcodes[opcode][0]]
