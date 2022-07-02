@@ -56,7 +56,8 @@ registers = {
 	'R5':'101',
 	'R6':'110',
 }
-
+lessthanflag=0
+morethanflag=0
 # Helper functions
 def syntax(opcode):
 	type = opcodeType[opcodes[opcode][0]]
@@ -135,7 +136,7 @@ for inst in lines:
 		if int(inst[2][1:]) > 255 or int(inst[2][1:]) < 0:
 			errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Integer {inst[2]} out of range, enter a numeric value between 0-255.')
 			continue
-		bin.append(opcodes.get(inst[0])[0]+registers.get(inst[1])+decToBin(inst[2][1:]))
+		bin.append(opcodes.get(inst[0])[0]+ registers.get(inst[1])+ decToBin(inst[2][1:]))
 	if type == 'C':
 		if inst[1] not in registers or inst[2] not in registers:
 			errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid register address')
@@ -146,7 +147,10 @@ for inst in lines:
 			errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid register address')
 			continue
 	if type == 'E':
-		pass
+		if int(inst[1][1:]) > 255 or int(inst[1][1:]) < 0:
+			errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Integer {inst[1]} out of range, enter a numeric value between 0-255.')
+			continue
+		bin.append(opcodes.get(inst[0])[0]+'000' +dectoBin(inst[1][1:]))		
 	if type == 'F':
 		bin.append(opcodes.get(inst[0])[0]+11*'0')
 
