@@ -96,6 +96,7 @@ for i in range(0,n):
 data = [i.strip() for i in arr]
 lines = [i.split() for i in data]
 for inst in lines:
+	#halt condition insert please
 	if (len(inst) == 0):
 		continue
 	elif inst[0] == 'var':
