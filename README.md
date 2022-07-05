@@ -11,7 +11,7 @@ This is a project for CSE112 - Computer Organisation, IIIT Delhi.
 
 
 ## Known bugs
-* No movr, mov acts as movi
+* ~~No movr, mov acts as movi~~
 * var assigning needs to be tested
 * No support for labels (yet).
 * Labels can't be repeated
