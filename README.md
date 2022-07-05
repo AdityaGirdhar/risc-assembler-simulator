@@ -12,4 +12,4 @@ This is a project for CSE112 - Computer Organisation, IIIT Delhi.
 
 ## Known bugs
 * mov
-* 
+* var
