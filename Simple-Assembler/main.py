@@ -5,7 +5,7 @@ import difflib
 opcodes = {
     'add':["10000","A"],
     'sub':["10001","A"],
-	'mov':["10010","B"],
+    'mov':["10010","B"],
     'ld':["10100","D"],
     'st':["10101","D"],
     'mul':["10110","A"],
@@ -27,7 +27,7 @@ opcodes = {
 opcodeType = {
     "10000":"A",
     "10001":"A",
-	"10010":"B",
+    "10010":"B",
     "10010":"B",
     "10011":"C",
     "10100":"D",
@@ -215,7 +215,7 @@ for inst in lines:
 		if inst[2] not in vars.keys():
 			errors.append(f"[Error] Line {str(lines.index(inst)+1)}: Undefined variable '{inst[2]}'")
 			continue
-		bin.append(opcodes.get(inst[0])[0]+registers.get(inst[1])+decToBin(vars.keys().index(inst[2])+len(lines)))		
+		bin.append(opcodes.get(inst[0])[0]+registers.get(inst[1])+decToBin(list(vars.keys()).index(inst[2])+len(lines)))		
 	if type == 'E':
 		if inst[1] not in labels.keys():
 			errors.append(f"[Error] Line {str(lines.index(inst)+1)}: Undefined label '{inst[1]}'")
