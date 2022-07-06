@@ -10,5 +10,4 @@ This is a project for CSE112 - Computer Organisation, IIIT Delhi.
 * Make sure that both the assembler and the simulator write to `output.txt`
 
 
-## Known bugs
-* var
+
