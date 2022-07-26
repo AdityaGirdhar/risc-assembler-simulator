@@ -1,3 +1,36 @@
+
+def decToBin(a):
+	sum = ''
+	n = int(a)
+	while (n):
+		sum += str(n%2)
+		n = n//2
+	return (8-len(str(sum)))*'0'+str(sum)[::-1]
+def xor(a,b):
+    s=""
+    for i in range(len(a)):
+        s+='0' if int(a[i])!=int(b[i]) else '1' 
+    return s
+def aand(a,b):
+    s=""
+    for i in range(len(a)):
+        s+='1' if int(a[i])==int(b[i])==1 else '0'
+    return s
+def oor(a,b):
+    s=""
+    for i in range(len(a)):
+        s+='0' if int(a[i])==int(b[i])==0 else '1'
+    return s
+
+def binToDec(binary):
+    binary1 = int(binary)
+    decimal, i, n = 0, 0, 0
+    while(binary != 0):
+        dec = int(binary) % 10
+        decimal = decimal + dec * pow(2, i)
+        binary= int(binary)//10
+        i+= 1
+    return decimal
 opcodeType = {
     "10000":"A",
     "10001":"A",
@@ -32,9 +65,9 @@ registers = {
 	'111':'FLAGS'
 }
 regvals={
-    'R0':0,
-    'R1':0,
-    'R2':0,
+    'R0':6,
+    'R1':3,
+    'R2':2,
     'R3':0,
     'R4':0,
     'R5':0,
@@ -68,7 +101,7 @@ for i in inp:
 	else:
 		instructions.append(i)
 while(pc<len(instructions)):
-    print(pc)
+    print(pc,"ddea")
     inst=instructions[pc]
     if inst[0:5] == '01010':
         halted = True
@@ -107,13 +140,44 @@ while(pc<len(instructions)):
         prinr(regvals)
         pc=pc+1
     elif inst[0:5] == '11010':
-        print("subtracting")
+        print("xoring")
         rs2=inst[10:13]
         rd=inst[13:16]
         rs1=inst[7:10]
         rs1r=regvals[registers[rs1]]
         rs2r=regvals[registers[rs2]]
-        rdv=rs1r-rs2r
+        x1=decToBin(rs1r)
+        x2=decToBin(rs2r)
+        s=xor(x1,x2)        
+        rdv=binToDec(s)
+        regvals[registers[rd]]=rdv
+        prinr(regvals)
+        pc=pc+1
+    elif inst[0:5] == '11011':
+        print("oring")
+        rs2=inst[10:13]
+        rd=inst[13:16]
+        rs1=inst[7:10]
+        rs1r=regvals[registers[rs1]]
+        rs2r=regvals[registers[rs2]]
+        x1=decToBin(rs1r)
+        x2=decToBin(rs2r)
+        s=oor(x1,x2)        
+        rdv=binToDec(s)
+        regvals[registers[rd]]=rdv
+        prinr(regvals)
+        pc=pc+1
+    elif inst[0:5] == '11100':
+        print("anding")
+        rs2=inst[10:13]
+        rd=inst[13:16]
+        rs1=inst[7:10]
+        rs1r=regvals[registers[rs1]]
+        rs2r=regvals[registers[rs2]]
+        x1=decToBin(rs1r)
+        x2=decToBin(rs2r)
+        s=aand  (x1,x2)        
+        rdv=binToDec(s)
         regvals[registers[rd]]=rdv
         prinr(regvals)
         pc=pc+1
