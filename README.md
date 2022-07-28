@@ -10,6 +10,6 @@ This is a project for the course CSE112 - Computer Organisation, IIIT Delhi.
 * Make sure that both the assembler and the simulator write to `stdout`
 
 
-*make sure that in case of overflow max value is fed into the variable
-*same for underflow
-*make sure no of instructions are less than or equal to 255 so that you can put the value of memory address in place
+* make sure that in case of overflow max value is fed into the variable
+* same for underflow
+* make sure no of instructions are less than or equal to 255 so that you can put the value of memory address in place
