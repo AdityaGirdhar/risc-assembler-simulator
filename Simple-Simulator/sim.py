@@ -35,6 +35,9 @@ def inv(a):
     for i in range(len(a)):
         s+='0' if int(a[i])==1 else '1'
     return s
+mem_add=[]
+for i in range(0,256):
+        mem_add.append(0)
 opcodeType = {
     "10000":"A",
     "10001":"A",
@@ -244,6 +247,18 @@ while(pc<len(instructions)):
             regvals["FLAGS.G"]=1
         else:
             regvals["FLAGS.L"]=1                
+        prinr(regvals)
+        pc=pc+1
+    elif inst[0:5] == '10100':
+        rd=inst[5:8]
+        a=binToDec(inst[8:16])
+        regvals[registers[rd]]=mem_add[a]
+        prinr(regvals)
+        pc=pc+1
+    elif inst[0:5] == '10101':
+        rd=inst[5:8]
+        a=binToDec(inst[8:16])
+        mem_add[a]=regvals[registers[rd]]
         prinr(regvals)
         pc=pc+1
          
