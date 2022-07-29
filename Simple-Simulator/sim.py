@@ -222,7 +222,7 @@ while(pc<len(instructions)):
         regvals["R1"]=b
         pc=pc+1
     elif inst[0:5] == '11101':
-        print("inverting)
+        print("inverting")
         rs1=inst[10:13]
         rs2=inst[13:16]
         rs1r=regvals[registers[rs1]]
