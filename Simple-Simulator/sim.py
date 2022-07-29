@@ -1,4 +1,3 @@
-
 def decToBin(a):
 	sum = ''
 	n = int(a)
@@ -31,6 +30,11 @@ def binToDec(binary):
         binary= int(binary)//10
         i+= 1
     return decimal
+def inv(a):
+    s=""
+    for i in range(len(a)):
+        s+='0' if int(a[i])==1 else '1'
+    return s
 opcodeType = {
     "10000":"A",
     "10001":"A",
@@ -176,8 +180,89 @@ while(pc<len(instructions)):
         rs2r=regvals[registers[rs2]]
         x1=decToBin(rs1r)
         x2=decToBin(rs2r)
-        s=aand  (x1,x2)        
+        s=aand(x1,x2)        
         rdv=binToDec(s)
         regvals[registers[rd]]=rdv
         prinr(regvals)
         pc=pc+1
+    elif inst[0:5] == '10010':
+        rd=inst[5:8]
+        a=binToDec(inst[8:16])
+        regvals[registers[rd]]=a
+        prinr(regvals)
+        pc=pc+1
+    elif inst[0:5] == '11001':
+        rd=inst[5:8]
+        a=binToDec(inst[8:16])
+        b=2**a
+        regvals[registers[rd]]=regvals[registers[rd]]*b
+        prinr(regvals)
+        pc=pc+1
+    elif inst[0:5] == '11000':
+        rd=inst[5:8]
+        a=binToDec(inst[8:16])
+        b=regvals[registers[rd]]>>a
+        regvals[registers[rd]]=b
+        prinr(regvals)
+        pc=pc+1
+    elif inst[0:5] == '10011':
+        rs1=inst[10:13]
+        rs2=inst[13:16]
+        rs2r=regvals[registers[rs2]]
+        regvals[registers[rs1]]=rs2r
+        pc=pc+1
+    elif inst[0:5] == '10111':
+        rs1=inst[10:13]
+        rs2=inst[13:16]
+        rs2r=regvals[registers[rs2]]
+        rs1r=regvals[registers[rs1]]
+        a=rs1r//rs2r
+        b=rs1r%rs2r
+        regvals["R0"]=a
+        regvals["R1"]=b
+        pc=pc+1
+    elif inst[0:5] == '11101':
+        print("inverting)
+        rs1=inst[10:13]
+        rs2=inst[13:16]
+        rs1r=regvals[registers[rs1]]
+        x1=decToBin(rs1r)
+        s=inv(x1)        
+        rdv=binToDec(s)
+        regvals[registers[rs2]]=rdv
+        prinr(regvals)
+        pc=pc+1
+    elif inst[0:5] == '11110':
+        print("Comparing")
+        rs1=inst[10:13]
+        rs2=inst[13:16]
+        rs1r=regvals[registers[rs1]]
+        rs2r=regvals[registers[rs2]]
+        if rs1r==rs2r:
+            regvals["FLAGS.E"]=1
+        elif rs1r>rs2r:
+            regvals["FLAGS.G"]=1
+        else:
+            regvals["FLAGS.L"]=1                
+        prinr(regvals)
+        pc=pc+1
+         
+    
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
