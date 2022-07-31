@@ -82,8 +82,7 @@ def isfloat(num):
         return True
     except ValueError:
         return False
-# Function for converting decimal to binary
-# Function for converting decimal to binary
+
 def float_bin(my_number, places = 3):
     my_whole, my_dec = str(my_number).split(".")
     my_whole = int(my_whole)
@@ -99,8 +98,6 @@ def float_bin(my_number, places = 3):
  
  
 def IEEE754(n) :
-    # identifying whether the number
-    # is positive or negative
     sign = 0
     if n < 0 :
         sign = 1
@@ -111,7 +108,6 @@ def IEEE754(n) :
     print("the decimal format of the same is" , dec)
     dotPlace = dec.find('.')
     onePlace = dec.find('1')
-    # finding the mantissa
     if onePlace > dotPlace:
         dec = dec.replace(".","")
         onePlace -= 1
@@ -120,18 +116,14 @@ def IEEE754(n) :
         dec = dec.replace(".","")
         dotPlace -= 1
     mantissa = dec[onePlace+1:]
- 
-    # calculating the exponent(E)
     exponent = dotPlace - onePlace
     exponent_bits = exponent 
  
-    # converting the exponent from
-    # decimal to binary
     exponent_bits = bin(exponent_bits).replace("0b",'')
  
     mantissa = mantissa[0:5]
  
-    # the IEEE754 notation in binary    
+      
     final = exponent_bits.zfill(3) + mantissa
  
     return (final)
