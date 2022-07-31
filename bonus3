@@ -76,28 +76,71 @@ def opcodeLength(opcode):
     s = syntax(opcode)
     return len(s.split())
 
-'''def decToBin(a):
-    sum = ''
-    n = int(a)
-    while (n):
-        sum += str(n%2)
-        n = n//2
-    return (8-len(str(sum)))*'0'+str(sum)[::-1]'''
 def isfloat(num):
     try:
         float(num)
         return True
     except ValueError:
         return False
-def binary(num):
-    t=''.join('{:0>8b}'.format(c) for c in struct.pack('!f', num))
-    return t[8:16]
+# Function for converting decimal to binary
+# Function for converting decimal to binary
+def float_bin(my_number, places = 3):
+    my_whole, my_dec = str(my_number).split(".")
+    my_whole = int(my_whole)
+    res = (str(bin(my_whole))+".").replace('0b','')
+ 
+    for x in range(places):
+        my_dec = str('0.')+str(my_dec)
+        temp = '%1.20f' %(float(my_dec)*2)
+        my_whole, my_dec = temp.split(".")
+        res += my_whole
+    return res
+ 
+ 
+ 
+def IEEE754(n) :
+    # identifying whether the number
+    # is positive or negative
+    sign = 0
+    if n < 0 :
+        sign = 1
+        n = n * (-1)
+    p = 30
+    # convert float to binary
+    dec = float_bin (n, places = p)
+    print("the decimal format of the same is" , dec)
+    dotPlace = dec.find('.')
+    onePlace = dec.find('1')
+    # finding the mantissa
+    if onePlace > dotPlace:
+        dec = dec.replace(".","")
+        onePlace -= 1
+        dotPlace -= 1
+    elif onePlace < dotPlace:
+        dec = dec.replace(".","")
+        dotPlace -= 1
+    mantissa = dec[onePlace+1:]
+ 
+    # calculating the exponent(E)
+    exponent = dotPlace - onePlace
+    exponent_bits = exponent 
+ 
+    # converting the exponent from
+    # decimal to binary
+    exponent_bits = bin(exponent_bits).replace("0b",'')
+ 
+    mantissa = mantissa[0:5]
+ 
+    # the IEEE754 notation in binary    
+    final = exponent_bits.zfill(3) + mantissa
+ 
+    return (final)
 ##-----Main code starts here-----##
 
 inp = []
 arr = []
 errors = []
-bin = []
+binary = []
 vars = {}
 labels = {}
 pc = 1
@@ -144,12 +187,12 @@ for inst in lines:
     if inst[0] == 'hlt':  
         if lines[-1] == inst :
             hltFound = True
-            bin.append(opcodes.get(inst[0])[0]+11*'0')
+            binary.append(opcodes.get(inst[0])[0]+11*'0')
             break
         if lines[-1] != inst :
             inbetweenhalt= True
             hltFound = True
-            bin.append(opcodes.get(inst[0])[0]+11*'0')
+            binary.append(opcodes.get(inst[0])[0]+11*'0')
             break
     elif inst[0] == 'var':
         errors.append("[Error] Line "+str(lines.index(inst)+1)+f": All 'var' declarations should be at the beginning of the code")
@@ -174,7 +217,7 @@ for inst in lines:
         if inst[1] == 'FLAGS' or inst[2] == 'FLAGS' or inst[3] == 'FLAGS':
             errors.append(f"[Error] Line {str(lines.index(inst)+1)}: Invalid use of FLAGS register")
             continue
-        bin.append(opcodes.get(inst[0])[0]+'00'+registers.get(inst[1])+registers.get(inst[2])+registers.get(inst[3]))
+        binary.append(opcodes.get(inst[0])[0]+'00'+registers.get(inst[1])+registers.get(inst[2])+registers.get(inst[3]))
     if type == 'B':
         if inst[1] not in registers:
             errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid register address')
@@ -187,17 +230,18 @@ for inst in lines:
                 if isfloat(inst[2][1:])!= True:
                     errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid float value {inst[2]}')
                     continue
-                if float(inst[2][1:]) >=142.22208 or float(inst[2][1:]) <= 1:
-                        print(float(inst[2][1:]),end="\n")
+                if float(inst[2][1:]) >142.22208 or float(inst[2][1:]) <1:
                         errors.append(f'[Error] Line {str(lines.index(inst)+1)}: float {inst[2]} out of range, enter a numween normal ran.')
                         continue
-                bin.append(opcodes.get(inst[0])[0]+ registers.get(inst[1])+ binary(float(inst[2][1:])))
+                print(float(inst[2][1:]),end="\n")
+                temp= float(inst[2][1:])
+                binary.append(opcodes.get(inst[0])[0]+ registers.get(inst[1])+ IEEE754(temp))
                 continue
             else:
                 if inst[2] not in registers:
                     errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid register address')
                     continue
-                bin.append('1001100000'+registers.get(inst[1])+registers.get(inst[2]))
+                binary.append('1001100000'+registers.get(inst[1])+registers.get(inst[2]))
                 continue
         if inst[2][0] != '$':
             s = syntax(inst[0])
@@ -206,11 +250,12 @@ for inst in lines:
         if isfloat(inst[2][1:])!= True:
             errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid integer value {inst[2]}')
             continue
-        if (float(inst[2][1:]) >= 142.22208 or float(inst[2][1:]) <=1):
-                        print(float(inst[2][1:]),end="\n")
-                        errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Integer {inst[2]} out of range, enter a numeric value between the range.')
-                        continue
-        bin.append(opcodes.get(inst[0])[0]+ registers.get(inst[1])+ binary(float(inst[2][1:])))
+        if (float(inst[2][1:]) >142.22208 or float(inst[2][1:]) <1):
+            errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Integer {inst[2]} out of range, enter a numeric value between the range.')
+            continue
+        print(float(inst[2][1:]),end="\n")
+        temp= float(inst[2][1:])
+        binary.append(opcodes.get(inst[0])[0]+ registers.get(inst[1])+ IEEE754(temp))
     if type == 'C':
         if inst[1] not in registers or inst[2] not in registers:
             errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid register address')
@@ -218,7 +263,7 @@ for inst in lines:
         if inst[1] == 'FLAGS' or inst[2] == 'FLAGS':
             errors.append(f"[Error] Line {str(lines.index(inst)+1)}: Invalid use of FLAGS register")
             continue
-        bin.append(opcodes.get(inst[0])[0]+'00000'+registers.get(inst[1])+registers.get(inst[2]))
+        binary.append(opcodes.get(inst[0])[0]+'00000'+registers.get(inst[1])+registers.get(inst[2]))
     if type == 'D':
         if inst[1] not in registers:
             errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid register address')
@@ -229,12 +274,14 @@ for inst in lines:
         if inst[2] not in vars.keys():
             errors.append(f"[Error] Line {str(lines.index(inst)+1)}: Undefined variable '{inst[2]}'")
             continue
-        bin.append(opcodes.get(inst[0])[0]+registers.get(inst[1])+ binary(float(list(vars.keys()).index(inst[2])+len(lines))))     
+        binary.append(opcodes.get(inst[0])[0]+registers.get(inst[1])+ IEEE754(float(list(vars.keys()).index(inst[2])+len(lines))))     
     if type == 'E':
         if inst[1] not in labels.keys():
             errors.append(f"[Error] Line {str(lines.index(inst)+1)}: Undefined label '{inst[1]}'")
             continue
-        bin.append(opcodes.get(inst[0])[0]+'000'+ binary(float(labels[inst[1]])))
+        temp= float(inst[2][1:])
+        print(float(inst[2][1:]),end="\n")
+        binary.append(opcodes.get(inst[0])[0]+'000'+ IEEE754(temp))
 
 if (hltFound != True):
     errors.append(f"[Error]: 'hlt' not found in code. Add 'hlt' at the end to halt execution.")
@@ -243,7 +290,7 @@ elif lines[-1][0] != 'hlt':
     errors.append(f"[Error]: 'hlt' not present at correct position. Add 'hlt' at the end to halt execution.")
 
 if len(errors) == 0:
-    for line in bin:
+    for line in binary:
         print(line)
 else:
     for line in errors:
