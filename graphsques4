@@ -318,13 +318,14 @@ while(PROGRAM_COUNTER<len(instructions)):
     elif inst[0:5]== "01100":
         print("jump if less than")
         if(regvals["FLAGS.L"]==1):
-             mem_addf=binToDec(inst[8:16])
-             print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
-             print("printing program counters",end="\n")
-             PROGRAM_COUNTER = mem_addf
-             CYCLE_COUNTER+=1
-             prinr(regvals)
-             continue
+            regvals["FLAGS.L"]=0
+            mem_addf=binToDec(inst[8:16])
+            print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
+            print("printing program counters",end="\n")
+            PROGRAM_COUNTER = mem_addf
+            CYCLE_COUNTER+=1
+            prinr(regvals)
+            continue
         else:
             print(" flag.L value isn't 1 ")
             prinr(regvals)
@@ -332,6 +333,7 @@ while(PROGRAM_COUNTER<len(instructions)):
         print("jump if greater than")
         mem_addf=binToDec(inst[8:16])
         if(regvals["FLAGS.G"]==1):
+            regvals["FLAGS.G"]=0
             print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
             print("printing program counters",end="\n")
             PROGRAM_COUNTER = mem_addf
@@ -385,4 +387,3 @@ plot.update_layout(
     yaxis_title="Memory Address",
 )
 plot.show()
-
