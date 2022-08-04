@@ -308,19 +308,19 @@ while(PROGRAM_COUNTER<len(instructions)):
     elif inst[0:5]== '11111':
         print("unconditional jump")
         mem_addf=binToDec(inst[8:16])
-        print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
+        #print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
         print("printing program counters",end="\n")
         prinr(regvals)
         PROGRAM_COUNTER = mem_addf
         CYCLE_COUNTER+=1
         continue
        
-    elif inst[0:5]== "01100":
+    elif inst[0:5] == "01100":
         print("jump if less than")
         if(regvals["FLAGS.L"]==1):
             regvals["FLAGS.L"]=0
             mem_addf=binToDec(inst[8:16])
-            print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
+            #print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
             print("printing program counters",end="\n")
             PROGRAM_COUNTER = mem_addf
             CYCLE_COUNTER+=1
@@ -329,16 +329,16 @@ while(PROGRAM_COUNTER<len(instructions)):
         else:
             print(" flag.L value isn't 1 ")
             prinr(regvals)
-    elif inst[0:5]==" 01101":
+    elif inst[0:5] == "01101":
         print("jump if greater than")
         mem_addf=binToDec(inst[8:16])
         if(regvals["FLAGS.G"]==1):
             regvals["FLAGS.G"]=0
-            print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
+            #print(f" jumping to memory address {memory_add[int(inst[8:16])]}")
             print("printing program counters",end="\n")
+            prinr(regvals)
             PROGRAM_COUNTER = mem_addf
             CYCLE_COUNTER+=1
-            prinr(regvals)
             continue
         else:
             print("flag.G value isn't set to 1")
@@ -375,8 +375,7 @@ plot.update_layout(
         'y':0.9,
         'x':1,
         'xanchor': 'center',
-        'yanchor': 'top'
-    },
+        'yanchor': 'top'},
     width=1000,
     height=1000,
     font_family="Times New Roman",
