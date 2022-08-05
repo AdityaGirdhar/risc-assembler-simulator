@@ -72,9 +72,9 @@ registers = {
 	'111':'FLAGS'
 }
 regvals={
-    'R0':6,
-    'R1':3,
-    'R2':2,
+    'R0':0,
+    'R1':0,
+    'R2':0,
     'R3':0,
     'R4':0,
     'R5':0,
@@ -123,6 +123,8 @@ while(PROGRAM_COUNTER<len(instructions)):
     print(PROGRAM_COUNTER,"ddea")
     inst=instructions[PROGRAM_COUNTER]
     if inst[0:5] == '01010':
+        CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+        PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         halted = True
         break
     elif inst[0:5] == '10000':
@@ -251,6 +253,8 @@ while(PROGRAM_COUNTER<len(instructions)):
         regvals[registers[rs1]]=rs2r
 
     elif inst[0:5] == '10111':
+        CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+        PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         print("dividing")
         rs1=inst[10:13]
         rs2=inst[13:16]
@@ -262,6 +266,8 @@ while(PROGRAM_COUNTER<len(instructions)):
         regvals["R1"]=b
         
     elif inst[0:5] == '11101':
+        CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+        PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         print("inverting")
         rs1=inst[10:13]
         rs2=inst[13:16]
@@ -273,6 +279,8 @@ while(PROGRAM_COUNTER<len(instructions)):
         prinr(regvals)
 
     elif inst[0:5] == '11110':
+        CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+        PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         print("Comparing")
         rs1=inst[10:13]
         rs2=inst[13:16]
@@ -300,7 +308,6 @@ while(PROGRAM_COUNTER<len(instructions)):
         print("storing")
         rd=inst[5:8]
         mem_addf=binToDec(inst[8:16])
-        memory_add[a]=regvals[registers[rd]]
         PROGRAM_COUNTER_LOCATION.append(mem_addf)
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         prinr(regvals)
@@ -308,11 +315,12 @@ while(PROGRAM_COUNTER<len(instructions)):
     elif inst[0:5]== '11111':
         print("unconditional jump")
         mem_addf=binToDec(inst[8:16])
-        #print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
         print("printing program counters",end="\n")
         prinr(regvals)
         PROGRAM_COUNTER = mem_addf
         CYCLE_COUNTER+=1
+        CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+        PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         continue
        
     elif inst[0:5] == "01100":
@@ -320,13 +328,16 @@ while(PROGRAM_COUNTER<len(instructions)):
         if(regvals["FLAGS.L"]==1):
             regvals["FLAGS.L"]=0
             mem_addf=binToDec(inst[8:16])
-            #print(f"jumping to mem_addr {memory_add[int(inst[8:16])]}")
             print("printing program counters",end="\n")
             PROGRAM_COUNTER = mem_addf
             CYCLE_COUNTER+=1
+            CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+            PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
             prinr(regvals)
             continue
         else:
+            CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+            PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
             print(" flag.L value isn't 1 ")
             prinr(regvals)
     elif inst[0:5] == "01101":
@@ -334,13 +345,16 @@ while(PROGRAM_COUNTER<len(instructions)):
         mem_addf=binToDec(inst[8:16])
         if(regvals["FLAGS.G"]==1):
             regvals["FLAGS.G"]=0
-            #print(f" jumping to memory address {memory_add[int(inst[8:16])]}")
             print("printing program counters",end="\n")
             prinr(regvals)
             PROGRAM_COUNTER = mem_addf
             CYCLE_COUNTER+=1
+            CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+            PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
             continue
         else:
+            CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+            PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
             print("flag.G value isn't set to 1")
             prinr(regvals)
             
@@ -351,7 +365,6 @@ for i in range(len(memory_add)):
     print(memory_add[i])
 
 time = datetime.datetime.now()  
-
 
 plot = go.Figure()
 
