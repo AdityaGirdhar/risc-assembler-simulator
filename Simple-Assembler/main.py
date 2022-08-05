@@ -95,6 +95,7 @@ bin = []
 vars = {}
 labels = {}
 pc = 1
+hltno = 0
 
 # Taking dynamic input
 while True:
@@ -130,6 +131,8 @@ for inst in lines:
 		label = lines[id].pop(0)[:-1]
 		lines[lines.index(inst)] = inst
 		labels[label] = id
+	if inst[0] == 'hlt':
+		hltno += 1
 
 # machine code conversion
 for inst in lines:
@@ -227,6 +230,9 @@ if (hltFound != True):
 
 elif lines[-1][0] != 'hlt':
 	errors.append(f"[Error]: 'hlt' not present at correct position. Add 'hlt' at the end to halt execution.")
+	
+if hltno > 1:
+	errors.append("[Error]: More than one 'hlt' statements present.")
 
 if len(errors) == 0:
 	for line in bin:
