@@ -170,9 +170,6 @@ for inst in lines:
 		if inst[1] not in registers:
 			errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid register address')
 			continue
-		if inst[1] == 'FLAGS':
-			errors.append(f"[Error] Line {str(lines.index(inst)+1)}: Invalid use of FLAGS register")
-			continue
 		if inst[0] == 'mov':
 			if inst[2][0] == '$':
 				if inst[2][1:].isnumeric() != True:
@@ -184,11 +181,16 @@ for inst in lines:
 				bin.append(opcodes.get(inst[0])[0]+ registers.get(inst[1])+ decToBin(inst[2][1:]))
 				continue
 			else:
+				if inst[2] == 'FLAGS':
+					errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid use of FLAGS register')
 				if inst[2] not in registers:
 					errors.append(f'[Error] Line {str(lines.index(inst)+1)}: Invalid register address')
 					continue
 				bin.append('1001100000'+registers.get(inst[1])+registers.get(inst[2]))
 				continue
+		if inst[1] == 'FLAGS':
+			errors.append(f"[Error] Line {str(lines.index(inst)+1)}: Invalid use of FLAGS register")
+			continue
 		if inst[2][0] != '$':
 			s = syntax(inst[0])
 			errors.append('[Error] Line '+str(lines.index(inst)+1)+f': Syntax for \'{inst[0]}\' is \'{s}\'')
