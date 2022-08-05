@@ -115,7 +115,7 @@ data = [i.strip() for i in arr]
 lines = [i.split() for i in data]
 hltFound = False
 
-# var checking
+# Var checking
 while (lines[0][0] == 'var'):
 	inst = lines[0]
 	if inst[0] == 'var' and len(inst) == 2:
@@ -124,24 +124,23 @@ while (lines[0][0] == 'var'):
 		errors.append(f"[Error] Invalid 'var' declaration '{inst}'. Syntax for 'var' is 'var var_name'")
 	lines.pop(lines.index(inst))
 
-# label checking
+# Label checking
 for inst in lines:
 	if inst[0][-1] == ':':
 		id = lines.index(inst)
 		label = lines[id].pop(0)[:-1]
 		lines[lines.index(inst)] = inst
 		labels[label] = id
-	if inst[0] == 'hlt':
-		hltno += 1
 
-# machine code conversion
+# Machine code conversion
 for inst in lines:
 	if len(inst) == 0:
 		continue
 	if inst[0] == 'hlt':
 		hltFound = True
+		hltno += 1
 		bin.append(opcodes.get(inst[0])[0]+11*'0')
-		break
+		continue
 	elif inst[0] == 'var':
 		errors.append("[Error] Line "+str(lines.index(inst)+1)+f": All 'var' declarations should be at the beginning of the code")
 		break
