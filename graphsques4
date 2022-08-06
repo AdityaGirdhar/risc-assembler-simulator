@@ -8,6 +8,16 @@ def decToBin(a):
 		sum += str(n%2)
 		n = n//2
 	return (8-len(str(sum)))*'0'+str(sum)[::-1]
+def decToBin16(a):
+	sum = ''
+	n = int(a)
+	while (n):
+		sum += str(n%2)
+		n = n//2
+	return (16-len(str(sum)))*'0'+str(sum)[::-1]
+
+def formattedOutput(pc, regvals):
+    print(f"{decToBin(pc)} {decToBin16(regvals['R0'])} {decToBin16(regvals['R1'])} {decToBin16(regvals['R2'])} {decToBin16(regvals['R3'])} {decToBin16(regvals['R4'])} {decToBin16(regvals['R5'])} {decToBin16(regvals['R6'])} 000000000000{regvals['FLAGS.V']}{regvals['FLAGS.L']}{regvals['FLAGS.G']}{regvals['FLAGS.E']}")
 def xor(a,b):
     s=""
     for i in range(len(a)):
@@ -91,9 +101,11 @@ inp = []
 instructions = []
 pc = 0 #Program Counter
 halted = False
+
 def prinr(a):
     for i in a:
         print(i,":",a[i])
+
 while True:
 	try:
 		l = input()
@@ -119,8 +131,9 @@ PROGRAM_COUNTER = 0
 PROGRAM_COUNTER_LOCATION = []
 CYCLE_COUNTER_VALUES = []
 loop=0
+
 while(PROGRAM_COUNTER<len(instructions)):
-    print(PROGRAM_COUNTER,"ddea")
+    #print(PROGRAM_COUNTER,"ddea")
     inst=instructions[PROGRAM_COUNTER]
     if inst[0:5] == '01010':
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
@@ -130,7 +143,7 @@ while(PROGRAM_COUNTER<len(instructions)):
     elif inst[0:5] == '10000':
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-        print("adding")
+        #print("adding")
         rs2=inst[10:13]
         rd=inst[13:16]
         rs1=inst[7:10]
@@ -138,10 +151,9 @@ while(PROGRAM_COUNTER<len(instructions)):
         rs2r=regvals[registers[rs2]]
         rdv=rs1r+rs2r
         regvals[registers[rd]]=rdv
-        prinr(regvals)
+        #prinr(regvals)
         
     elif inst[0:5] == '10001':
-        print("subtracting")
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         rs2=inst[10:13]
@@ -151,12 +163,12 @@ while(PROGRAM_COUNTER<len(instructions)):
         rs2r=regvals[registers[rs2]]
         rdv=rs1r-rs2r
         regvals[registers[rd]]=rdv
-        prinr(regvals)
+        #prinr(regvals)
        
     elif inst[0:5] == '10110':
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-        print("multiplying")
+        #print("multiplying")
         rs2=inst[10:13]
         rd=inst[13:16]
         rs1=inst[7:10]
@@ -164,12 +176,12 @@ while(PROGRAM_COUNTER<len(instructions)):
         rs2r=regvals[registers[rs2]]
         rdv=rs1r*rs2r
         regvals[registers[rd]]=rdv
-        prinr(regvals)
+        #prinr(regvals)
        
     elif inst[0:5] == '11010':
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-        print("xoring")
+        #print("xoring")
         rs2=inst[10:13]
         rd=inst[13:16]
         rs1=inst[7:10]
@@ -180,10 +192,10 @@ while(PROGRAM_COUNTER<len(instructions)):
         s=xor(x1,x2)        
         rdv=binToDec(s)
         regvals[registers[rd]]=rdv
-        prinr(regvals)
+        #prinr(regvals)
         
     elif inst[0:5] == '11011':
-        print("oring")
+        #print("oring")
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         rs2=inst[10:13]
@@ -196,12 +208,13 @@ while(PROGRAM_COUNTER<len(instructions)):
         s=oor(x1,x2)        
         rdv=binToDec(s)
         regvals[registers[rd]]=rdv
-        prinr(regvals)
+        #prinr(regvals)
         
     elif inst[0:5] == '11100':
+        #print(CYCLE_COUNTER)
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-        print("anding")
+        #print("anding")
         rs2=inst[10:13]
         rd=inst[13:16]
         rs1=inst[7:10]
@@ -212,50 +225,55 @@ while(PROGRAM_COUNTER<len(instructions)):
         s=aand(x1,x2)        
         rdv=binToDec(s)
         regvals[registers[rd]]=rdv
-        prinr(regvals)
+        #prinr(regvals)
         
     elif inst[0:5] == '10010':
-        print("move immediate")
+        #print("move immediate")
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         rd=inst[5:8]
         a=binToDec(inst[8:16])
         regvals[registers[rd]]=a
-        prinr(regvals)
+        #prinr(regvals)
         
     elif inst[0:5] == '11001':
-        print("left shift")
+        #print("left shift")
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         rd=inst[5:8]
         a=binToDec(inst[8:16])
         b=2**a
         regvals[registers[rd]]=regvals[registers[rd]]*b
-        prinr(regvals)
+        #prinr(regvals)
 
     elif inst[0:5] == '11000':
-        print("right shift")
+        #print("right shift")
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         rd=inst[5:8]
         a=binToDec(inst[8:16])
         b=regvals[registers[rd]]>>a
         regvals[registers[rd]]=b
-        prinr(regvals)
+        #prinr(regvals)
        
     elif inst[0:5] == '10011':
-        print("move register")
+        #print("move register")
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         rs1=inst[10:13]
         rs2=inst[13:16]
-        rs2r=regvals[registers[rs2]]
-        regvals[registers[rs1]]=rs2r
+        if( registers[rs1]== 'FLAGS'):
+            rs2r=regvals["FLAGS.V"]+ regvals["FLAGS.L"]+regvals["FLAGS.G"]+regvals["FLAGS.E"]
+            regvals["FLAGS.V"]=0
+            regvals["FLAGS.E"]=0
+            regvals["FLAGS.L"]=0
+            regvals["FLAGS.G"]=0
+        else:   
+            rs2r= regvals[registers[rs1]]
+            regvals[registers[rs2]]=rs2r
 
     elif inst[0:5] == '10111':
-        CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
-        PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-        print("dividing")
+        #print("dividing")
         rs1=inst[10:13]
         rs2=inst[13:16]
         rs2r=regvals[registers[rs2]]
@@ -264,11 +282,10 @@ while(PROGRAM_COUNTER<len(instructions)):
         b=rs1r%rs2r
         regvals["R0"]=a
         regvals["R1"]=b
-        
-    elif inst[0:5] == '11101':
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-        print("inverting")
+    elif inst[0:5] == '11101':
+        #print("inverting")
         rs1=inst[10:13]
         rs2=inst[13:16]
         rs1r=regvals[registers[rs1]]
@@ -276,12 +293,11 @@ while(PROGRAM_COUNTER<len(instructions)):
         s=inv(x1)        
         rdv=binToDec(s)
         regvals[registers[rs2]]=rdv
-        prinr(regvals)
-
-    elif inst[0:5] == '11110':
+        #prinr(regvals)
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-        print("Comparing")
+    elif inst[0:5] == '11110':
+        #print("Comparing")
         rs1=inst[10:13]
         rs2=inst[13:16]
         rs1r=regvals[registers[rs1]]
@@ -292,78 +308,131 @@ while(PROGRAM_COUNTER<len(instructions)):
             regvals["FLAGS.G"]=1
         else:
             regvals["FLAGS.L"]=1                
-        prinr(regvals)
-
+        #prinr(regvals)
+        CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+        PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         
     elif inst[0:5] == '10100':
-        print("loading")
+        #print("loading")
         rd=inst[5:8]
         mem_addf=binToDec(inst[8:16])
         regvals[registers[rd]]=memory_add[a]
         PROGRAM_COUNTER_LOCATION.append(mem_addf)
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
-        prinr(regvals)
+        #prinr(regvals)
 
     elif inst[0:5] == '10101':
-        print("storing")
+        #print("storing")
         rd=inst[5:8]
         mem_addf=binToDec(inst[8:16])
-        PROGRAM_COUNTER_LOCATION.append(mem_addf)
+        PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
-        prinr(regvals)
+        #prinr(regvals)
 
     elif inst[0:5]== '11111':
-        print("unconditional jump")
+        #print("unconditional jump")
         mem_addf=binToDec(inst[8:16])
-        print("printing program counters",end="\n")
-        prinr(regvals)
-        PROGRAM_COUNTER = mem_addf
-        CYCLE_COUNTER+=1
+        #print("printing program counters",end="\n")
+        #prinr(regvals)
         CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
         PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
+        PROGRAM_COUNTER = mem_addf
+        CYCLE_COUNTER+=1
         continue
-       
-    elif inst[0:5] == "01100":
-        print("jump if less than")
-        if(regvals["FLAGS.L"]==1):
+    elif inst[0:5]== "01111":
+        if(regvals["FLAGS.E"]==1):
+            regvals["FLAGS.G"]=0
             regvals["FLAGS.L"]=0
+            regvals["FLAGS.E"]=0
+            regvals["FLAGS.V"]=0
             mem_addf=binToDec(inst[8:16])
-            print("printing program counters",end="\n")
+            CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+            PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
+            #print("printing program counters",end="\n")
             PROGRAM_COUNTER = mem_addf
             CYCLE_COUNTER+=1
-            CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
-            PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-            prinr(regvals)
+            #prinr(regvals)
             continue
         else:
+            regvals["FLAGS.G"]=0
+            regvals["FLAGS.L"]=0
+            regvals["FLAGS.E"]=0
+            regvals["FLAGS.V"]=0
             CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
             PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-            print(" flag.L value isn't 1 ")
-            prinr(regvals)
+            pass
+            #print(" flag.L value isn't 1 ")
+            #prinr(regvals)
+        
+    elif inst[0:5] == "01100":
+        #print("jump if less than")
+        if(regvals["FLAGS.L"]==1):
+            regvals["FLAGS.G"]=0
+            regvals["FLAGS.L"]=0
+            regvals["FLAGS.E"]=0
+            regvals["FLAGS.V"]=0
+            CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+            PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
+            mem_addf=binToDec(inst[8:16])
+            #print("printing program counters",end="\n")
+            PROGRAM_COUNTER = mem_addf
+            
+            CYCLE_COUNTER+=1
+            #prinr(regvals)
+            continue
+        else:
+            regvals["FLAGS.G"]=0
+            regvals["FLAGS.L"]=0
+            regvals["FLAGS.E"]=0
+            regvals["FLAGS.V"]=0
+            CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
+            PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
+            pass
+            #print(" flag.L value isn't 1 ")
+            #prinr(regvals)
     elif inst[0:5] == "01101":
-        print("jump if greater than")
+        #print("jump if greater than")
         mem_addf=binToDec(inst[8:16])
         if(regvals["FLAGS.G"]==1):
             regvals["FLAGS.G"]=0
-            print("printing program counters",end="\n")
-            prinr(regvals)
-            PROGRAM_COUNTER = mem_addf
-            CYCLE_COUNTER+=1
+            regvals["FLAGS.L"]=0
+            regvals["FLAGS.E"]=0
+            regvals["FLAGS.V"]=0
+            #print("printing program counters",end="\n")
+            #prinr(regvals
             CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
             PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
+            PROGRAM_COUNTER = mem_addf
+            
+            CYCLE_COUNTER+=1
+
+
             continue
         else:
+            regvals["FLAGS.G"]=0
+            regvals["FLAGS.L"]=0
+            regvals["FLAGS.E"]=0
+            regvals["FLAGS.V"]=0
             CYCLE_COUNTER_VALUES.append(CYCLE_COUNTER)
             PROGRAM_COUNTER_LOCATION.append(PROGRAM_COUNTER)
-            print("flag.G value isn't set to 1")
-            prinr(regvals)
-            
+            pass
+            #print("flag.G value isn't set to 1")
+            #prinr(regvals)
+    
+    formattedOutput(PROGRAM_COUNTER, regvals)
     PROGRAM_COUNTER+=1 
     CYCLE_COUNTER+=1
-            
-for i in range(len(memory_add)):
-    print(memory_add[i])
 
+formattedOutput(PROGRAM_COUNTER, regvals)
+
+for i in memory_add:
+    if len(i.split()) == 0:
+        memory_add[memory_add.index(i)] = '0000000000000000'
+
+ln = len(memory_add) if len(memory_add) <= 256 else 256
+
+for i in range(ln):
+    print(memory_add[i])
 time = datetime.datetime.now()  
 
 plot = go.Figure()
