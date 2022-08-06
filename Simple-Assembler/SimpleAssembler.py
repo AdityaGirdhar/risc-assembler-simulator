@@ -86,7 +86,7 @@ def decToBin(a):
 		n = n//2
 	return (8-len(str(sum)))*'0'+str(sum)[::-1]
 
-##-----Main code starts here-----##
+##------Main code starts here------##
 
 inp = []
 arr = []
