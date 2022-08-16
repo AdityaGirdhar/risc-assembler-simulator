@@ -8,10 +8,3 @@ This is a project for the course CSE112 - Computer Organisation, IIIT Delhi.
 * Add the simulator code in the `Simple-Simulator` directory
 * Make sure that both the assembler and the simulator read from `stdin`
 * Make sure that both the assembler and the simulator write to `stdout`
-* flag semantics
-## simulator
-* make sure that in case of overflow max value is fed into the variable
-* same for underflow
-* make sure no of instructions are less than or equal to 255 so that you can put the value of memory address in place
-## bonus 3
-* make same changes as assembler here
